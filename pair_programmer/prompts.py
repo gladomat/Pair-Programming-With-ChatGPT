@@ -61,6 +61,13 @@ make it easy for a non developer to understand:
 Output the results in markdown.
 """
 
+docstring_code_template = """
+Please write a docstring for this code and \n
+add variables coded as sphinx variables:
+
+{question}
+"""
+
 test_code_template = """
 Can you please create test cases in code for this Python code?
 
