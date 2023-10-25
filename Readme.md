@@ -22,8 +22,11 @@ OPENAI_API_KEY=sk-...
 1. Clone the repository.
 2. Install the required dependencies.
 3. Add your OpenAI API key to the `.env` file.
-4. Run the notebook.
-5. Use the provided templates to interact with ChatGPT for various programming tasks.
+4. Run the code:
+    
+    ```bash
+   python pair_programmer/app.py
+    ```
 
 ## Templates Provided
 
