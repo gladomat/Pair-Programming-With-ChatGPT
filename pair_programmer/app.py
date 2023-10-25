@@ -43,7 +43,7 @@ def improve_text(switch, existing_text):
 
 with gr.Blocks() as demo:
 
-    def get_completion(text, model="gpt-3.5-turbo"):
+    def get_completion(text, model="gpt-4-0613"):
         """
         First it creates an OpenAI Chat completion with necessary parameters
         To enable streaming, we add parameter stream=True
