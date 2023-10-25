@@ -34,6 +34,12 @@ OPENAI_API_KEY=sk-...
 5. **Write Test Cases**: Provide a code snippet and get test cases for it.
 6. **Make Code More Efficient**: Provide a code snippet and get a more efficient version of it.
 7. **Debug Code**: Provide a buggy code snippet and get debugging help.
+8. **Explain Code**: Provide a code snippet and get a detailed explanation of how it works.
+9. **Document Code**: Provide a code snippet and get documentation for it.
+10. **Write Docstrings**: Provide a code snippet and get docstrings for the functions or classes.
+11. **Optimize Code**: Provide a code snippet and get an optimized version of it.
+12. **Create Readme**: Write a `Readme.md` file based on the pasted code.
+
 
 ## Note
 
