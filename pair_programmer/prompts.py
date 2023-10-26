@@ -3,7 +3,7 @@ I don't think this code is the best, can you help me?
 
 {question}
 
-Please explain in detail, what you did to improve it.
+Please change the code and explain in detail, what you did to improve it.
 """
 
 rewrite_code_template = """
@@ -11,7 +11,7 @@ I don't think this code is the best way to do it in Python, can you help me?
 
 {question}
 
-Please explore multiple ways of solving the problem, and explain each.
+Please explore multiple ways of solving the problem, give examples, and explain each.
 """
 
 pythonic_recommend_template = """
@@ -20,7 +20,7 @@ I don't think this code is the best way to do it in Python, can you help me?
 {question}
 
 Please explore multiple ways of solving the problem, 
-and tell me which is the  most Pythonic.
+and tell me which is the  most Pythonic, and change the code accordingly.
 """
 
 simplify_code_template = """
@@ -62,8 +62,7 @@ Output the results in markdown.
 """
 
 docstring_code_template = """
-Please write a docstring for this code and \n
-add variables coded as sphinx variables:
+Please write a docstring, that has a line length of maximum 80 characters, for this code and add variables coded as sphinx variables:
 
 {question}
 """

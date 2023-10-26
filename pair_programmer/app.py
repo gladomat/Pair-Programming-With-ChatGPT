@@ -7,13 +7,17 @@ from prompts import *
 _ = load_dotenv(find_dotenv())  # read local .env file
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
+"""
+Get inspired here for
+https://github.com/project-baize/baize-chatbot/blob/main/demo/app_modules/utils.py
+"""
+
 
 def improve_text(switch, existing_text):
     if switch == "Improve":
         new_text = improve_code_template.format(question=existing_text)
     elif switch == "Rewrite":
         new_text = rewrite_code_template.format(question=existing_text)
-        print("rewrite", new_text)
     elif switch == "Pythonic":
         new_text = pythonic_recommend_template.format(question=existing_text)
     elif switch == "Simplify":
@@ -34,11 +38,36 @@ def improve_text(switch, existing_text):
         new_text = efficient_code_template.format(question=existing_text)
     elif switch == "Readme":
         new_text = readme_creation_template.format(question=existing_text)
+    elif switch == "Clear":
+        new_text = ""
     else:
         new_text = existing_text
 
     prompt.update(new_text)
     return new_text
+
+
+def reset_textbox():
+    return gr.update(value=""), ""
+
+
+class State:
+    interrupted = False
+
+    def interrupt(self):
+        self.interrupted = True
+
+    def recover(self):
+        self.interrupted = False
+
+
+shared_state = State()
+
+
+def cancel_outputing():
+    shared_state.interrupt()
+    textbox = reset_textbox()
+    return "Stop Done"
 
 
 with gr.Blocks() as demo:
@@ -69,6 +98,7 @@ with gr.Blocks() as demo:
             yield partial_response
 
     gr.Markdown("## Pair Programmer")
+    status_display = gr.Markdown("Success", elem_id="status_display")
     prompt = gr.Textbox(lines=15, label="Input Text", placeholder="Please write some code here")
     with gr.Row():
         improve = gr.Radio(
@@ -85,14 +115,17 @@ with gr.Blocks() as demo:
                 "Debug",
                 "Optimize",
                 "Readme",
+                "Clear"
             ],
             label="Action",
         )
 
         submit_button = gr.Button("Submit")
+        cancel_button = gr.Button("Stop")
 
     improve.change(fn=improve_text, inputs=[improve, prompt], outputs=[prompt])
     submit_button.click(fn=get_completion, inputs=[prompt], outputs=gr.Textbox(lines=20, label="Output Text"))
+    cancel_button.click(cancel_outputing, [], [status_display])
 
 gr.close_all()
 # To allow streaming, enable the queue().
