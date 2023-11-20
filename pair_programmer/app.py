@@ -3,6 +3,7 @@ import os
 import openai
 from dotenv import load_dotenv, find_dotenv
 from prompts import *
+from utils import *
 
 _ = load_dotenv(find_dotenv())  # read local .env file
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -38,6 +39,8 @@ def improve_text(switch, existing_text):
         new_text = efficient_code_template.format(question=existing_text)
     elif switch == "Readme":
         new_text = readme_creation_template.format(question=existing_text)
+    elif switch == "Pydantic":
+        new_text = pydantic_conversion_template.format(question=existing_text)
     elif switch == "Clear":
         new_text = ""
     else:
@@ -72,7 +75,7 @@ def cancel_outputing():
 
 with gr.Blocks() as demo:
 
-    def get_completion(text, model="gpt-4-0613"):
+    def get_completion(text, model="gpt-4-1106-preview"):
         """
         First it creates an OpenAI Chat completion with necessary parameters
         To enable streaming, we add parameter stream=True
@@ -95,7 +98,7 @@ with gr.Blocks() as demo:
         for stream_response in response:
             token = stream_response["choices"][0]["delta"].get("content", "")
             partial_response += token
-            yield partial_response
+            yield convert_to_markdown(partial_response)
 
     gr.Markdown("## Pair Programmer")
     status_display = gr.Markdown("Success", elem_id="status_display")
@@ -106,6 +109,7 @@ with gr.Blocks() as demo:
                 "Improve",
                 "Rewrite",
                 "Pythonic",
+                "Pydantic",
                 "Simplify",
                 "Runnable",
                 "Explain",
@@ -124,7 +128,7 @@ with gr.Blocks() as demo:
         cancel_button = gr.Button("Stop")
 
     improve.change(fn=improve_text, inputs=[improve, prompt], outputs=[prompt])
-    submit_button.click(fn=get_completion, inputs=[prompt], outputs=gr.Textbox(lines=20, label="Output Text"))
+    submit_button.click(fn=get_completion, inputs=[prompt], outputs=gr.Textbox(lines=30, label="Output Text"))
     cancel_button.click(cancel_outputing, [], [status_display])
 
 gr.close_all()
@@ -132,5 +136,5 @@ gr.close_all()
 demo.queue()
 demo.launch(
     share=False,
-    server_port=int(os.environ.get("PORT", 7860)),
+    server_port=int(os.environ.get("PORT", 7861)),
 )
