@@ -100,3 +100,11 @@ Can you please write a README.MD file based on the following code?
 
  This is very important for my career.
 """
+
+pydantic_conversion_template = """
+You are an expert Python coder. Can you refactor this code to use Pydantic?
+
+{question}
+
+This is very important for my career.
+"""
