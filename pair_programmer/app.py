@@ -14,6 +14,19 @@ https://github.com/project-baize/baize-chatbot/blob/main/demo/app_modules/utils.
 """
 
 
+# Define a custom CSS style for the HTML output
+custom_css = """
+.custom-html-output {
+    height: 30em;  # Adjust the height to resemble 30 lines
+    overflow-y: scroll;  # Add scroll for overflow content
+    background-color: #f5f5f5;  # Background color similar to a textbox
+    border: 1px solid #ccc;  # Border similar to a textbox
+    padding: 10px;  # Padding inside the box
+    font-family: monospace;  # Monospace font for code-like appearance
+}
+"""
+
+
 def improve_text(switch, existing_text):
     if switch == "Improve":
         new_text = improve_code_template.format(question=existing_text)
@@ -73,9 +86,9 @@ def cancel_outputing():
     return "Stop Done"
 
 
-with gr.Blocks() as demo:
+with gr.Blocks(css=custom_css) as demo:
 
-    def get_completion(text, model="gpt-4-1106-preview"):
+    def get_completion(text, model="gpt-4-0613"):
         """
         First it creates an OpenAI Chat completion with necessary parameters
         To enable streaming, we add parameter stream=True
@@ -98,7 +111,7 @@ with gr.Blocks() as demo:
         for stream_response in response:
             token = stream_response["choices"][0]["delta"].get("content", "")
             partial_response += token
-            yield convert_to_markdown(partial_response)
+            yield markdown_to_html_with_syntax_highlight(partial_response)
 
     gr.Markdown("## Pair Programmer")
     status_display = gr.Markdown("Success", elem_id="status_display")
@@ -119,7 +132,7 @@ with gr.Blocks() as demo:
                 "Debug",
                 "Optimize",
                 "Readme",
-                "Clear"
+                "Clear",
             ],
             label="Action",
         )
@@ -128,13 +141,22 @@ with gr.Blocks() as demo:
         cancel_button = gr.Button("Stop")
 
     improve.change(fn=improve_text, inputs=[improve, prompt], outputs=[prompt])
-    submit_button.click(fn=get_completion, inputs=[prompt], outputs=gr.Textbox(lines=30, label="Output Text"))
+    submit_button.click(
+        fn=get_completion,
+        inputs=[prompt],
+        outputs=gr.HTML(
+            lines=30,
+            label="Output Text",
+            show_copy_button=True,
+        ),
+    )
     cancel_button.click(cancel_outputing, [], [status_display])
+
 
 gr.close_all()
 # To allow streaming, enable the queue().
 demo.queue()
 demo.launch(
     share=False,
-    server_port=int(os.environ.get("PORT", 7861)),
+    server_port=int(os.environ.get("PORT", 7862)),
 )
