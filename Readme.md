@@ -27,6 +27,15 @@ OPENAI_API_KEY=sk-...
     ```bash
    python pair_programmer/app.py
     ```
+    You will get an output like this:
+    
+    ```
+    Running on local URL:  http://127.0.0.1:7861
+   
+   To create a public link, set `share=True` in `launch()`.
+   ```
+5. Open the URL in your browser.
+
 
 ## Templates Provided
 
